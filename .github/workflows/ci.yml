@@ -66,7 +66,7 @@ jobs:
           $path = "target\diag\victory.exe"
           if (Test-Path $path) {
             Write-Host "Found: $path"
-            ls -la $path
+            Get-Item $path | Select-Object FullName, Length, LastWriteTime
           } else {
             Write-Host "Not found at $path, searching..."
             Get-ChildItem -Recurse -Filter "victory.exe" | Select-Object FullName, Length, LastWriteTime
