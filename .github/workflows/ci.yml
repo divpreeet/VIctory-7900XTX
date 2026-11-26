@@ -61,12 +61,22 @@ jobs:
       - name: Build victory (diag profile, diagnostics feature)
         run: cargo build --locked --profile diag -p victory --features diagnostics
       - name: Verify binary exists
-        run: ls -la target/diag/victory.exe
+        shell: pwsh
+        run: |
+          $path = "target\diag\victory.exe"
+          if (Test-Path $path) {
+            Write-Host "Found: $path"
+            ls -la $path
+          } else {
+            Write-Host "Not found at $path, searching..."
+            Get-ChildItem -Recurse -Filter "victory.exe" | Select-Object FullName, Length, LastWriteTime
+            exit 1
+          }
       - name: Upload victory.exe as artifact
         uses: actions/upload-artifact@v4
         with:
           name: victory-diag-windows-x64
-          path: target/diag/victory.exe
+          path: target\diag\victory.exe
           retention-days: 30
 
   check:
